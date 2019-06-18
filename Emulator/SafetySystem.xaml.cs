@@ -47,6 +47,7 @@ namespace Emulator
 		{
 			string[] strArray = new string[4];
 			int i = 0;
+			bool tmp = true;
 			foreach (string line in File.ReadLines("LastUserParameters.txt"))
 			{
 				string[] separator = new string[] { ";" };
@@ -54,12 +55,18 @@ namespace Emulator
 				if (strArray.Length >= 4 && strArray2[0] == "SafetySystem")
 				{
 					strArray[i] = "SafetySystem;" + Server + ";" + Key + ";" + Security + ";" + Thing + ";" + Service + ";";
+					tmp = false;
+					i++;
 				}
-				else
+				else if(strArray2[0].Length > 0)
 				{
 					strArray[i] = line;
+					i++;
 				}
-				i++;
+			}
+			if (tmp)
+			{
+				strArray[i] = "SafetySystem;" + Server + ";" + Key + ";" + Security + ";" + Thing + ";" + Service + ";";
 			}
 			File.WriteAllLines("LastUserParameters.txt", strArray);
 		}
@@ -165,6 +172,26 @@ namespace Emulator
 			Security = CbSecurity.IsChecked.ToString();
 		}
 
+		private void TbRange1_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			d1 = ((TextBox)sender).Text;
+		}
+
+		private void TbRange2_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			d2 = ((TextBox)sender).Text;
+		}
+
+		private void TbRange3_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			d3 = ((TextBox)sender).Text;
+		}
+
+		private void CbSecurity_Checked(object sender, RoutedEventArgs e)
+		{
+			Security = CbSecurity.IsChecked.ToString();
+		}
+
 		private void BtnLoadSettings_Click(object sender, RoutedEventArgs e)
 		{
 			string path = "UserParameters.txt";
@@ -210,12 +237,12 @@ namespace Emulator
 				}
 				catch (Exception exc)
 				{
-					TbLogSafetySystem_Add("Ошибка загрузки параметров пользователя");
+					TbLogSafetySystem_Add("Ошибка установки параметров пользователя");
 				}
 			}
 			else
 			{
-				TbLogSafetySystem_Add("Ошибка загрузки параметров пользователя");
+				TbLogSafetySystem_Add("Ошибка установки параметров пользователя");
 			}
 		}
 

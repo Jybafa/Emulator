@@ -15,6 +15,7 @@
 			SmartCamera.Closing();
 			SafetySystem.Closing();
 			RemoteTerminal.Closing();
+			RobotSimulator.Closing();
 		}
 	}
 }

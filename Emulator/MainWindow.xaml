@@ -17,7 +17,7 @@
 				<dragablz:InterTabController />
 			</dragablz:TabablzControl.InterTabController>
 			<TabItem Header="СИМУЛЯТОР РОБОТА">
-				<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+				<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
 					<Emulator:RobotSimulator/>
 				</ScrollViewer>
 			</TabItem>

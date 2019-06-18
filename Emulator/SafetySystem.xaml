@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Emulator.SafetySystem"
+﻿<UserControl x:Name="UserControl" x:Class="Emulator.SafetySystem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -15,7 +15,7 @@
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="2*" MinWidth="530"/>
-			<ColumnDefinition Width="3*"/>
+			<ColumnDefinition Width="2*"/>
 		</Grid.ColumnDefinitions>
 		<Grid Background="White" Margin="10,10,5,5">
 			<materialDesign:Card Background="White" Foreground="#FF455A64" Margin="-1" VerticalAlignment="Stretch" FontSize="16">
@@ -35,9 +35,9 @@
 						<RowDefinition Height="1*"/>
 					</Grid.RowDefinitions>
 					<Label Content="Дальность" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Foreground="#FF455A64" Grid.Column="1" Margin="0,0,0,0" Grid.Row="1"/>
-					<TextBox x:Name="TbRange1" Grid.Column="2" HorizontalContentAlignment="Center" Margin="5,0" Grid.Row="1" Text="0" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" BorderBrush="#FF455A64"/>
-					<TextBox x:Name="TbRange2" Grid.Column="3" HorizontalContentAlignment="Center" Margin="5,0" Grid.Row="1" Text="0" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" BorderBrush="#FF455A64"/>
-					<TextBox x:Name="TbRange3" Grid.Column="4" HorizontalContentAlignment="Center" Margin="5,0" Grid.Row="1" Text="0" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" BorderBrush="#FF455A64"/>
+					<TextBox x:Name="TbRange1" Grid.Column="2" HorizontalContentAlignment="Center" Margin="5,0" Grid.Row="1" Text="0" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" BorderBrush="#FF455A64" TextChanged="TbRange1_TextChanged"/>
+					<TextBox x:Name="TbRange2" Grid.Column="3" HorizontalContentAlignment="Center" Margin="5,0" Grid.Row="1" Text="0" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" BorderBrush="#FF455A64" TextChanged="TbRange2_TextChanged"/>
+					<TextBox x:Name="TbRange3" Grid.Column="4" HorizontalContentAlignment="Center" Margin="5,0" Grid.Row="1" Text="0" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" BorderBrush="#FF455A64" TextChanged="TbRange3_TextChanged"/>
 					<Button x:Name="BtnTest1" Content="Тест 1" Background="#FF455A64" BorderBrush="#FF455A64" Grid.Column="1" Margin="5" Grid.Row="2" Height="Auto" MaxHeight="70" Click="BtnTest1_Click" FontSize="20"/>
 					<Button x:Name="BtnTest2" Content="Тест 2" Background="#FF455A64" BorderBrush="#FF455A64" Grid.Column="2" Margin="5" Grid.Row="2" Height="Auto" MaxHeight="70" Click="BtnTest2_Click" FontSize="20"/>
 					<Button x:Name="BtnTest3" Content="Тест 3" Background="#FF455A64" BorderBrush="#FF455A64" Grid.Column="3" Margin="5" Grid.Row="2" Height="Auto" MaxHeight="70" Click="BtnTest3_Click" FontSize="20"/>
@@ -85,7 +85,7 @@
 						Refresh time
 					</TextBlock>
 					<controls:NumericUpDown x:Name="NudRefreshTime" Value="3" Minimum="1" Maximum="9" VerticalAlignment="Top" ButtonsAlignment="Opposite" Grid.Row="6" Grid.Column="1" Margin="35,0,0,0" HorizontalAlignment="Left" Background="White" BorderBrush="#FF455A64" Foreground="#FF455A64" Height="26"/>
-					<CheckBox x:Name="CbSecurity" Style="{StaticResource MaterialDesignUserForegroundCheckBox}" Margin="110,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="6" Grid.Column="1" Width="87" Height="26" Click="CbSecurity_Click">
+					<CheckBox x:Name="CbSecurity" Style="{StaticResource MaterialDesignUserForegroundCheckBox}" Margin="110,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="6" Grid.Column="1" Width="87" Height="26" Click="CbSecurity_Click" Checked="CbSecurity_Checked">
 						Security
 					</CheckBox>
 					<Button x:Name="BtnConnect" Background="#FF455A64" BorderBrush="#FF455A64" Content="Подключиться" Padding="0" materialDesign:RippleAssist.IsCentered="True" Click="BtnConnect_Click" Grid.Column="1" Grid.Row="6" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="112" Margin="0,0,10,0" FontSize="14"/>
@@ -120,8 +120,8 @@
 				</Grid>
 			</materialDesign:Card>
 		</Grid>
-		<Grid Background="White" Margin="5,10,10,10" Grid.Column="1" Grid.RowSpan="3">
-			<materialDesign:Card Background="White" Foreground="#FF455A64" Margin="-1" Padding="8" FontSize="16" VerticalAlignment="Stretch">
+		<Grid Background="White" Margin="5,10,10,10" HorizontalAlignment="Stretch" Grid.Column="1" Grid.RowSpan="3">
+			<materialDesign:Card Background="White" Foreground="#FF455A64" Margin="-1" Padding="8" FontSize="16"  VerticalAlignment="Stretch">
 				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="1*" MaxHeight="24"/>
@@ -138,7 +138,7 @@
 					<Separator Style="{StaticResource MaterialDesignDarkSeparator}" Margin="0" Grid.Row="1"/>
 					<Button x:Name="BtnLoadSettings" Background="#FF455A64" BorderBrush="#FF455A64" Content="Загрузить из файла настроек" Padding="2 0 0 0" materialDesign:RippleAssist.IsCentered="True" Click="BtnLoadSettings_Click" Margin="5" Grid.Row="2"/>
 					<Separator Style="{StaticResource MaterialDesignDarkSeparator}" Margin="0" Grid.Row="3" />
-					<ListBox x:Name="LbUserParameters" Foreground="#FF455A64" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible" FontSize="14" ScrollViewer.CanContentScroll="True" ScrollViewer.IsDeferredScrollingEnabled="True" Background="WhiteSmoke" BorderBrush="WhiteSmoke" Margin="0,5" Grid.Row="4"/>
+					<ListBox x:Name="LbUserParameters" Foreground="#FF455A64"  ScrollViewer.HorizontalScrollBarVisibility="Auto"  ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" FontSize="14" Background="WhiteSmoke" BorderBrush="WhiteSmoke" Margin="0,5" Grid.Row="4"/>
 					<Separator Style="{StaticResource MaterialDesignDarkSeparator}" Margin="0" Grid.Row="5"/>
 					<Button x:Name="BtnSetSettings" Background="#FF455A64" BorderBrush="#FF455A64" Content="Установить настройки" Padding="2 0 0 0" materialDesign:RippleAssist.IsCentered="True" Click="BtnSetSettings_Click" Margin="5" Grid.Row="6"/>
 				</Grid>

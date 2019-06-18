@@ -58,6 +58,7 @@ namespace Emulator
 		{
 			string[] strArray = new string[4];
 			int i = 0;
+			bool tmp = true;
 			foreach (string line in File.ReadLines("LastUserParameters.txt"))
 			{
 				string[] separator = new string[] { ";" };
@@ -65,12 +66,18 @@ namespace Emulator
 				if (strArray.Length >= 4 && strArray2[0] == "RemoteTerminal")
 				{
 					strArray[i] = "RemoteTerminal;" + Server + ";" + Key + ";" + Security + ";" + Thing + ";" + Service + ";";
+					tmp = false;
+					i++;
 				}
-				else
+				else if(strArray2[0].Length>0)
 				{
 					strArray[i] = line;
-				}
-				i++;
+					i++;
+				}				
+			}
+			if (tmp)
+			{
+				 strArray[i] = "RemoteTerminal;" + Server + ";" + Key + ";" + Security + ";" + Thing + ";" + Service + ";";
 			}
 			File.WriteAllLines("LastUserParameters.txt", strArray);
 		}
@@ -190,6 +197,11 @@ namespace Emulator
 			Security = CbSecurity.IsChecked.ToString();
 		}
 
+		private void CbSecurity_Checked(object sender, RoutedEventArgs e)
+		{
+			Security = CbSecurity.IsChecked.ToString();
+		}
+
 		private void BtnLoadSettings_Click(object sender, RoutedEventArgs e)
 		{
 			string path = "UserParameters.txt";
@@ -235,12 +247,12 @@ namespace Emulator
 				}
 				catch (Exception exc)
 				{
-					TbLogRemoteTerminal_Add("Ошибка загрузки параметров пользователя");
+					TbLogRemoteTerminal_Add("Ошибка установки параметров пользователя");
 				}
 			}
 			else
 			{
-				TbLogRemoteTerminal_Add("Ошибка загрузки параметров пользователя");
+				TbLogRemoteTerminal_Add("Ошибка установки параметров пользователя");
 			}
 		}
 
@@ -279,8 +291,9 @@ namespace Emulator
 						var result = streamReader.ReadToEnd();
 						RootObjectRemoteTerminal answer = JsonConvert.DeserializeObject<RootObjectRemoteTerminal>(result);
 						TbLogRemoteTerminal_Add("Полученные данные:  " + result + "\r\nОтправленные данные:  " + "{\"p\":" + DeadMenSwitch.Value + ",\"b1\":" + b1 + ",\"b2\":" + b2 + ",\"b3\":" + b3 + "}");
-						LED1.Foreground = LED1text.Foreground = LED2.Foreground = LED2text.Foreground = LED3.Foreground = LED3text.Foreground = LED4.Foreground = LED4text.Foreground = Brushes.WhiteSmoke;
-						LED1.Kind = LED2.Kind = LED3.Kind = LED4.Kind = PackIconKind.LightbulbOn;
+						var converter = new System.Windows.Media.BrushConverter();
+						LED1.Foreground = LED1text.Foreground = LED2.Foreground = LED2text.Foreground = LED3.Foreground = LED3text.Foreground = LED4.Foreground = LED4text.Foreground = (Brush)converter.ConvertFromString("#FF455A64");
+						LED1.Kind = LED2.Kind = LED3.Kind = LED4.Kind = PackIconKind.LightbulbOnOutline;
 						if (answer.L1 == 1)
 						{
 							LED1.Foreground = LED1text.Foreground = Brushes.Blue;

@@ -14,9 +14,9 @@
 			<RowDefinition Height="10*"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="90*" MinWidth="610"/>
-			<ColumnDefinition Width="30*" MinWidth="350"/>
-			<ColumnDefinition Width="30*" MinWidth="395"/>
+			<ColumnDefinition MinWidth="610"/>
+			<ColumnDefinition Width="350"/>
+			<ColumnDefinition Width="395"/>
 		</Grid.ColumnDefinitions>
 		<h:HelixViewport3D x:Name="viewPort3d" ViewCubeHeight="150" ViewCubeWidth="150" ViewCubeVerticalPosition="Bottom" CoordinateSystemLabelForeground="White" CoordinateSystemVerticalPosition="Center" CoordinateSystemHorizontalPosition="Right"  CoordinateSystemHeight="150" CoordinateSystemWidth="150" RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Unspecified" BorderBrush="Black" BorderThickness="5" ShowFrameRate="True"  IsManipulationEnabled="True" IsViewCubeEdgeClicksEnabled="True" Margin="10,10,5,5">
 			<h:HelixViewport3D.Background>
@@ -71,7 +71,7 @@
 							<TextBox x:Name="TbStatus" TextWrapping="Wrap" Grid.Row="1" Text="0" IsReadOnly="True" Focusable="False" Grid.Column="1" FontSize="16" TextAlignment="Center" Margin="2,0" ContextMenuService.IsEnabled="False" BorderBrush="WhiteSmoke" Background="WhiteSmoke" Foreground="#FF455A64"/>
 							<Label Content="Last N" Margin="0,0,0,0" Grid.Column="2" Grid.Row="1" FontSize="16" Foreground="#FF455A64" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right" />
 							<TextBox x:Name="TbLastN" TextWrapping="Wrap" IsReadOnly="True" Focusable="False" Text="0" Grid.Row="1" Grid.Column="3" FontSize="16" TextAlignment="Center" Margin="2,0" ContextMenuService.IsEnabled="False" BorderBrush="WhiteSmoke" Background="WhiteSmoke" Foreground="#FF455A64"/>
-							<TextBox x:Name="TbM11" Background="WhiteSmoke" Foreground="#FF455A64" Text="0" Grid.Column="1" Grid.Row="3" FontSize="16" Margin="2,0,2,2" TextAlignment="Center" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" TextChanged="TbM11_TextChanged" MaxLength="3" CaretBrush="White"/>
+							<TextBox x:Name="TbM11" Background="WhiteSmoke" Foreground="#FF455A64" Text="0" Grid.Column="1" Grid.Row="3" FontSize="16" Margin="2,0,2,2" TextAlignment="Center" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" TextChanged="TbM11_TextChanged" MaxLength="3"/>
 							<TextBox x:Name="TbM12" Background="WhiteSmoke" Foreground="#FF455A64" Text="0" Grid.Column="1" Grid.Row="4" FontSize="16" Margin="2,0,2,2" TextAlignment="Center" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" TextChanged="TbM12_TextChanged" MaxLength="3"/>
 							<TextBox x:Name="TbM13" Background="WhiteSmoke" Foreground="#FF455A64" Text="0" Grid.Column="1" Grid.Row="5" FontSize="16" Margin="2,0,2,2" TextAlignment="Center" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" TextChanged="TbM13_TextChanged" MaxLength="3"/>
 							<TextBox x:Name="TbM14" Background="WhiteSmoke" Foreground="#FF455A64" Text="0" Grid.Column="1" Grid.Row="6" FontSize="16" Margin="2,0,2,2" TextAlignment="Center" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" TextChanged="TbM14_TextChanged" MaxLength="3"/>
@@ -177,10 +177,10 @@
 							<Label Content="MR T" Foreground="#FF455A64" Margin="0,0,2,0" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" Grid.Row="4"/>
 							<Label Content="MR G" Foreground="#FF455A64" Margin="0,0,2,0" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" Grid.Row="5"/>
 							<Label Content="MR L" Foreground="#FF455A64" Margin="0,0,2,0" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" Grid.Row="6"/>
-							<TextBox x:Name="TbMR1n" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="1" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3"/>
-							<TextBox x:Name="TbMR1x" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="2" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3"/>
-							<TextBox x:Name="TbMR1y" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="3" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="4"/>
-							<TextBox x:Name="TbMR1t" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="4" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3"/>
+							<TextBox x:Name="TbMR1n" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="1" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" TextChanged="TbMR1n_TextChanged"/>
+							<TextBox x:Name="TbMR1x" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="2" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" TextChanged="TbMR1x_TextChanged"/>
+							<TextBox x:Name="TbMR1y" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="3" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="4" TextChanged="TbMR1y_TextChanged"/>
+							<TextBox x:Name="TbMR1t" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="4" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="3" TextChanged="TbMR1t_TextChanged"/>
 							<TextBox x:Name="TbMR1g" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="5" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="1"/>
 							<TextBox x:Name="TbMR1l" Margin="0,0,12,0" TextWrapping="Wrap" TextAlignment="Center" Text="0" BorderBrush="#FF455A64" Grid.Column="1" Grid.Row="6" PreviewTextInput="Tb_PreviewTextInput" PreviewKeyDown="Tb_PreviewKeyDown" MaxLength="1"/>
 							<Button x:Name="ButtonEnforcement" Content="Выполнить" Click="ButtonEnforcement_Click" Background="#FF455A64" BorderBrush="#FF455A64"  Grid.Row="7" Margin="5" Grid.ColumnSpan="2" Grid.Column="1" Padding="0" Height="Auto"/>
@@ -269,7 +269,7 @@
 							Refresh time
 						</TextBlock>
 						<controls:NumericUpDown x:Name="NudRefreshTime" Value="3" Minimum="1" Maximum="9" VerticalAlignment="Top" ButtonsAlignment="Opposite" Grid.Row="6" Grid.Column="1" Margin="30,0,0,0" HorizontalAlignment="Left" Background="White" BorderBrush="#FF455A64" Foreground="#FF455A64" Height="26"/>
-						<CheckBox x:Name="CbSecurity" Style="{StaticResource MaterialDesignUserForegroundCheckBox}" Margin="100,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="6" Grid.Column="1" Width="87" Height="26" Click="CbSecurity_Click">
+						<CheckBox x:Name="CbSecurity" Style="{StaticResource MaterialDesignUserForegroundCheckBox}" Margin="100,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="6" Grid.Column="1" Width="87" Height="26" Click="CbSecurity_Click" Checked="CbSecurity_Checked">
 							Security
 						</CheckBox>
 						<Button x:Name="BtnConnect" Background="#FF455A64" BorderBrush="#FF455A64" Content="Подключиться" Padding="0" materialDesign:RippleAssist.IsCentered="True" Click="BtnConnect_Click" Grid.Column="1" Grid.Row="6" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="112" Margin="0,0,10,0" FontSize="14"/>

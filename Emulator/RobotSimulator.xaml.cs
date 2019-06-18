@@ -102,28 +102,26 @@ namespace Emulator
 
 			RoboticArm.Content = Initialize_Environment(modelsNames);
 
-			var builder = new MeshBuilder(true, true);
-			var position = new Point3D(0, 0, 0);
-			builder.AddSphere(position, 50, 15, 15);
-			visual = new ModelVisual3D();
-
 			Map.Fill = new ImageBrush(new BitmapImage(new Uri("res\\image\\map.png", UriKind.Relative)));
 
 			viewPort3d.RotateGesture = new MouseGesture(MouseAction.RightClick);
 			viewPort3d.PanGesture = new MouseGesture(MouseAction.LeftClick);
-			viewPort3d.Children.Add(visual);
 			viewPort3d.Children.Add(RoboticArm);
 			viewPort3d.Camera.LookDirection = new Vector3D(-14000, 0, -14000);
 			viewPort3d.Camera.UpDirection = new Vector3D(0.0, 0.0, 1.0);
 			viewPort3d.Camera.Position = new Point3D(13700, -200, 14000);
 
 			Boxs = new box[4];
+			Boxs[0] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(560, 1190, joints[8].model.Bounds.SizeZ + 60));
+			Boxs[1] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(-953, 2710, joints[9].model.Bounds.SizeZ + 60));
+			Boxs[2] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(1536, 2142, joints[10].model.Bounds.SizeZ + 60));
+			Boxs[3] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(8, 3678, joints[11].model.Bounds.SizeZ + 60));
 
-			Boxs[0] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -45), new Point3D(0, 0, 0)), new TranslateTransform3D(-700, -2600, joints[8].model.Bounds.SizeZ + 60));
+			/*Boxs[0] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -45), new Point3D(0, 0, 0)), new TranslateTransform3D(-700, -2600, joints[8].model.Bounds.SizeZ + 60));
 			Boxs[1] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(700, -1240, joints[9].model.Bounds.SizeZ + 60));
 			Boxs[2] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(560, -3840, joints[10].model.Bounds.SizeZ + 60));
-			Boxs[3] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -45), new Point3D(0, 0, 0)), new TranslateTransform3D(1960, -2500, joints[11].model.Bounds.SizeZ + 60));
-
+			Boxs[3] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -45), new Point3D(0, 0, 0)), new TranslateTransform3D(1960, -2500, joints[11].model.Bounds.SizeZ + 60));*/
+			
 			double[] angles = { joints[0].angle, joints[1].angle, joints[2].angle, joints[3].angle = 90, joints[4].angle, joints[5].angle = 70 };
 			ForwardKinematics(angles);
 
@@ -163,6 +161,7 @@ namespace Emulator
 		{
 			string[] strArray = new string[4];
 			int i = 0;
+			bool tmp = true;
 			foreach (string line in File.ReadLines("LastUserParameters.txt"))
 			{
 				string[] separator = new string[] { ";" };
@@ -170,12 +169,18 @@ namespace Emulator
 				if (strArray.Length >= 4 && strArray2[0] == "RobotSimulator")
 				{
 					strArray[i] = "RobotSimulator;" + Server + ";" + Key + ";" + Security + ";" + Thing + ";" + Service + ";";
+					tmp = false;
+					i++;
 				}
-				else
+				else if(strArray2[0].Length > 0)
 				{
 					strArray[i] = line;
+					i++;
 				}
-				i++;
+			}
+			if (tmp)
+			{
+				strArray[i] = "RobotSimulator;" + Server + ";" + Key + ";" + Security + ";" + Thing + ";" + Service + ";";
 			}
 			File.WriteAllLines("LastUserParameters.txt", strArray);
 		}
@@ -185,7 +190,7 @@ namespace Emulator
 		private void Tb_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
 			int val;
-			if (!Int32.TryParse(e.Text, out val))
+			if (!Int32.TryParse(e.Text, out val) && (e.Text!="-"))
 			{
 				e.Handled = true;
 			}
@@ -224,7 +229,6 @@ namespace Emulator
 
 		Color oldColor = Colors.White;
 		string basePath = "";
-		ModelVisual3D visual;
 		double LearningRate = 0.01;
 		double SamplingDistance = 0.15;
 		double DistanceThreshold = 20;
@@ -451,7 +455,7 @@ namespace Emulator
 			}
 			else
 			{
-				movements = 5000;
+				movements = 4000;
 				RenderTimer.Start();
 			}
 		}
@@ -493,7 +497,7 @@ namespace Emulator
 						if (movements == 0)
 						{
 							lastRobotCommand.Animation++;
-							movements = 50000;
+							movements = 4000;
 							lastRobotCommand.point = new Vector3D(joints[12].model.Bounds.Location.X, joints[12].model.Bounds.Location.Y, joints[12].model.Bounds.Location.Z);
 						}
 						break;
@@ -509,7 +513,7 @@ namespace Emulator
 						if (movements == 0)
 						{
 							lastRobotCommand.Animation++;
-							movements = 50000;
+							movements = 4000;
 						}
 						break;
 					case 3:
@@ -528,7 +532,7 @@ namespace Emulator
 						if (movements == 0)
 						{
 							lastRobotCommand.Animation++;
-							movements = 50000;
+							movements = 4000;
 						}
 						break;
 					default:
@@ -589,7 +593,7 @@ namespace Emulator
 		{
 			for (int i = 0; i <= 5; i++)
 			{
-				if (oldAngles[i] != angles[i])
+				if (Math.Round(oldAngles[i],3) != Math.Round(angles[i],3))
 					return false;
 			}
 
@@ -622,7 +626,7 @@ namespace Emulator
 		public Vector3D ForwardKinematics(double[] angles)
 		{
 			FB = new Transform3DGroup();
-			T = new TranslateTransform3D(-2500, 0, 0);
+			T = new TranslateTransform3D(-1500, 0, 0);
 			FB.Children.Add(T);
 
 			F1 = new Transform3DGroup();
@@ -777,245 +781,10 @@ namespace Emulator
 		{
 			if (FromCommandQueue.IsChecked == true)
 			{
-				movements = 5000;
+				movements = 4000;
 				TbStatus.Text = "1";
 			}
 		}
-
-		private void TbM11_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				m11 = double.Parse(str);
-			}
-			else
-			{
-				m11 = 0;
-			}
-		}
-
-		private void TbM12_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				m12 = double.Parse(str);
-			}
-			else
-			{
-				m12 = 0;
-			}
-		}
-
-		private void TbM13_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				m13 = double.Parse(str);
-			}
-			else
-			{
-				m13 = 0;
-			}
-		}
-
-		private void TbM14_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				m14 = double.Parse(str);
-			}
-			else
-			{
-				m14 = 0;
-			}
-		}
-
-		private void TbM15_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				m15 = double.Parse(str);
-			}
-			else
-			{
-				m15 = 0;
-			}
-		}
-
-		private void TbM16_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				m16 = double.Parse(str);
-			}
-			else
-			{
-				m16 = 0;
-			}
-		}
-
-		private void TbL11_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				l11 = double.Parse(str);
-			}
-			else
-			{
-				l11 = 0;
-			}
-		}
-
-		private void TbL12_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				l12 = double.Parse(str);
-			}
-			else
-			{
-				l12 = 0;
-			}
-		}
-
-		private void TbL13_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				l13 = double.Parse(str);
-			}
-			else
-			{
-				l13 = 0;
-			}
-		}
-
-		private void TbL14_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				l14 = double.Parse(str);
-			}
-			else
-			{
-				l14 = 0;
-			}
-		}
-
-		private void TbL15_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				l15 = double.Parse(str);
-			}
-			else
-			{
-				l15 = 0;
-			}
-		}
-
-		private void TbL16_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				l16 = double.Parse(str);
-			}
-			else
-			{
-				l16 = 0;
-			}
-		}
-
-		private void TbT11_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				t11 = double.Parse(str);
-			}
-			else
-			{
-				t11 = 0;
-			}
-		}
-
-		private void TbT12_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				t12 = double.Parse(str);
-			}
-			else
-			{
-				t12 = 0;
-			}
-		}
-
-		private void TbT13_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				t13 = double.Parse(str);
-			}
-			else
-			{
-				t13 = 0;
-			}
-		}
-
-		private void TbT14_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				t14 = double.Parse(str);
-			}
-			else
-			{
-				t14 = 0;
-			}
-		}
-
-		private void TbT15_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				t15 = double.Parse(str);
-			}
-			else
-			{
-				t15 = 0;
-			}
-		}
-
-		private void TbT16_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			string str = ((TextBox)sender).Text;
-			if (str != "")
-			{
-				t16 = double.Parse(str);
-			}
-			else
-			{
-				t16 = 0;
-			}
-		}
-
 
 		private void LastExecutedCommand()
 		{
@@ -1058,7 +827,7 @@ namespace Emulator
 						break;
 				};
 				Movement(X1, Y1, T1, G1);
-				movements += 50000;
+				movements += 4000;
 				TbStatus.Text = "1";
 			}
 			else
@@ -1222,12 +991,12 @@ namespace Emulator
 			l15 = rnd.Next(0, 9000);
 			l16 = rnd.Next(0, 9000);
 
-			t11 = rnd.Next(240, 250);
-			t12 = rnd.Next(240, 250);
-			t13 = rnd.Next(240, 250);
-			t14 = rnd.Next(240, 250);
-			t15 = rnd.Next(240, 250);
-			t16 = rnd.Next(240, 250);
+			t11 = rnd.Next(240, 250)/10;
+			t12 = rnd.Next(240, 250)/10;
+			t13 = rnd.Next(240, 250)/10;
+			t14 = rnd.Next(240, 250)/10;
+			t15 = rnd.Next(240, 250)/10;
+			t16 = rnd.Next(240, 250)/10;
 
 			OutputServomotors();
 		}
@@ -1292,7 +1061,6 @@ namespace Emulator
 			{
 				T1 = int.Parse(TbMR1t.Text);
 			}
-
 			else
 			{
 				T1 = 0;
@@ -1332,17 +1100,10 @@ namespace Emulator
 			return angle * (180.0 / Math.PI);
 		}
 
-		private double AngleBetweenVectors(Vector3D target1, Vector3D target2)
-		{
-			Vector3D V1 = new Vector3D(target1.X + 2500, target1.Y, target1.Z);
-			Vector3D V2 = new Vector3D(target2.X + 2500, target2.Y, target1.Z);
-			return RadianToDegree(Math.Acos((V1.X * V2.X + V1.Y * V2.Y) / (Math.Sqrt(Math.Pow(V1.X, 2) + Math.Pow(V1.Y, 2)) * Math.Sqrt(Math.Pow(V2.X, 2) + Math.Pow(V2.Y, 2)))));
-		}
-
 		private Vector3D RotateAdditionalVectorAngle()
 		{
-			double Ax = -2500, Ay = 0;
-			double Bx = -2332, By = 0;
+			double Ax = -1500, Ay = 0;
+			double Bx = -1332, By = 0;
 			double ABx = Bx - Ax;
 			double ABy = By - Ay;
 			double ACx = ABx * Math.Cos(DegreeToRadian(joints[0].angle)) - ABy * Math.Sin(DegreeToRadian(joints[0].angle));
@@ -1368,6 +1129,425 @@ namespace Emulator
 			return target;
 		}
 
+		private void TbM11_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					m11 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				m11 = 0;
+			}
+		}
+
+		private void TbM12_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					m12 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				m12 = 0;
+			}
+		}
+
+		private void TbM13_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					m13 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				m13 = 0;
+			}
+		}
+
+		private void TbM14_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					m14 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				m14 = 0;
+			}
+		}
+
+		private void TbM15_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					m15 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				m15 = 0;
+			}
+		}
+
+		private void TbM16_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					m16 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				m16 = 0;
+			}
+		}
+
+		private void TbL11_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					l11 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				l11 = 0;
+			}
+		}
+
+		private void TbL12_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					l12 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				l12 = 0;
+			}
+		}
+
+		private void TbL13_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					l13 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				l13 = 0;
+			}
+		}
+
+		private void TbL14_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					l14 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				l14 = 0;
+			}
+		}
+
+		private void CbSecurity_Checked(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void TbL15_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					l15 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				l15 = 0;
+			}
+		}
+
+		private void TbL16_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					l16 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				l16 = 0;
+			}
+		}
+
+		private void TbT11_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					t11 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				t11 = 0;
+			}
+		}
+
+		private void TbT12_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					t12 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				t12 = 0;
+			}
+		}
+
+		private void TbT13_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					t13 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				t13 = 0;
+			}
+		}
+
+		private void TbT14_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					t14 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				t14 = 0;
+			}
+		}
+
+		private void TbT15_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					t15 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				t15 = 0;
+			}
+		}
+
+		private void TbT16_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			string str = ((TextBox)sender).Text;
+			if (str != "")
+			{
+				try
+				{
+					t16 = double.Parse(str);
+				}
+				catch (Exception exc)
+				{
+					((TextBox)sender).Text = m11.ToString();
+				}
+			}
+			else
+			{
+				t16 = 0;
+			}
+		}
+
+		private void TbMR1n_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			if (TbMR1n.Text.IndexOf('-') >= 0)
+			{
+				TbMR1n.Text = TbMR1n.Text.Remove(TbMR1n.Text.IndexOf('-'), 1);
+			}
+		}
+
+		private void TbMR1x_TextChanged(object sender, TextChangedEventArgs e)
+		{
+
+			try
+			{
+				int tmp = int.Parse(TbMR1x.Text);
+			}
+			catch (Exception exc)
+			{
+				if (TbMR1x.Text.IndexOf('-') >= 0)
+				{
+					TbMR1x.Text = TbMR1x.Text.Remove(TbMR1x.Text.IndexOf('-'), 1);
+				}
+			}
+		}
+
+		private void TbMR1y_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			try
+			{
+				int tmp = int.Parse(TbMR1y.Text);
+			}
+			catch (Exception exc)
+			{
+				if (TbMR1y.Text.IndexOf('-') >= 0)
+				{
+					TbMR1y.Text = TbMR1y.Text.Remove(TbMR1y.Text.IndexOf('-'), 1);
+				}
+			}
+		}
+
+		private void TbMR1t_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			try
+			{
+				int tmp = int.Parse(TbMR1t.Text);
+			}
+			catch (Exception exc)
+			{
+				if (TbMR1t.Text.IndexOf('-') >= 0)
+				{
+					TbMR1t.Text = TbMR1t.Text.Remove(TbMR1t.Text.IndexOf('-'), 1);
+				}
+			}
+		}
+
 		public void TbLogRobotSimulator_Add(string newline)
 		{
 			TbLogRobotSimulator.Text += "\r\n\r\n" + newline;
@@ -1375,25 +1555,28 @@ namespace Emulator
 
 		private void BtnRefresh_Click(object sender, RoutedEventArgs e)
 		{
-			Boxs[0] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -45), new Point3D(0, 0, 0)), new TranslateTransform3D(-700, -2600, joints[8].model.Bounds.SizeZ + 60));
-			Boxs[1] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(700, -1240, joints[9].model.Bounds.SizeZ + 60));
-			Boxs[2] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(560, -3840, joints[10].model.Bounds.SizeZ + 60));
-			Boxs[3] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -45), new Point3D(0, 0, 0)), new TranslateTransform3D(1960, -2500, joints[11].model.Bounds.SizeZ + 60));
+			Boxs[0] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(560, 1190, joints[8].model.Bounds.SizeZ + 60));
+			Boxs[1] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(-953, 2710, joints[9].model.Bounds.SizeZ + 60));
+			Boxs[2] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(1536, 2142, joints[10].model.Bounds.SizeZ + 60));
+			Boxs[3] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(8, 3678, joints[11].model.Bounds.SizeZ + 60));
 			double[] angles = { joints[0].angle, joints[1].angle, joints[2].angle, joints[3].angle, joints[4].angle, joints[5].angle = 70 };
 			ForwardKinematics(angles);
+			NewGripper = 0;
 		}
 
 		private void BtnClearAll_Click(object sender, RoutedEventArgs e)
 		{
 			lastRobotCommand = null;
-			Boxs[0] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -45), new Point3D(0, 0, 0)), new TranslateTransform3D(-700, -2600, joints[8].model.Bounds.SizeZ + 60));
-			Boxs[1] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(700, -1240, joints[9].model.Bounds.SizeZ + 60));
-			Boxs[2] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(560, -3840, joints[10].model.Bounds.SizeZ + 60));
-			Boxs[3] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -45), new Point3D(0, 0, 0)), new TranslateTransform3D(1960, -2500, joints[11].model.Bounds.SizeZ + 60));
+			Boxs[0] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(560, 1190, joints[8].model.Bounds.SizeZ + 60));
+			Boxs[1] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(-953, 2710, joints[9].model.Bounds.SizeZ + 60));
+			Boxs[2] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(1536, 2142, joints[10].model.Bounds.SizeZ + 60));
+			Boxs[3] = new box(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 45), new Point3D(0, 0, 0)), new TranslateTransform3D(8, 3678, joints[11].model.Bounds.SizeZ + 60));
 			double[] angles = { joints[0].angle = 0, joints[1].angle = 0, joints[2].angle = 0, joints[3].angle = 90, joints[4].angle = 0, joints[5].angle = 70 };
 			ForwardKinematics(angles);
 			CommandQueue.Items.Clear();
 			TbStatus.Text = TbLastN.Text = "0";
+			NewGripper = 0;
+			n = 0;
 			TbM11.Text = TbM12.Text = TbM13.Text = TbM14.Text = TbM15.Text = TbM16.Text = "0";
 			TbT11.Text = TbT12.Text = TbT13.Text = TbT14.Text = TbT15.Text = TbT16.Text = "0";
 			TbL11.Text = TbL12.Text = TbL13.Text = TbL14.Text = TbL15.Text = TbL16.Text = "0";
@@ -1478,12 +1661,12 @@ namespace Emulator
 				}
 				catch (Exception exc)
 				{
-					TbLogRobotSimulator_Add("Ошибка загрузки параметров пользователя");
+					TbLogRobotSimulator_Add("Ошибка установки параметров пользователя");
 				}
 			}
 			else
 			{
-				TbLogRobotSimulator_Add("Ошибка загрузки параметров пользователя");
+				TbLogRobotSimulator_Add("Ошибка установки параметров пользователя");
 			}
 		}
 

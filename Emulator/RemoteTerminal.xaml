@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" MinWidth="530"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid Background="White" Margin="10,10,5,5">
             <materialDesign:Card Background="White" Foreground="#FF455A64" Margin="-1" VerticalAlignment="Stretch" FontSize="16">
@@ -108,7 +108,7 @@
 						Refresh time
                     </TextBlock>
                     <controls:NumericUpDown x:Name="NudRefreshTime" Value="3" Minimum="1" Maximum="9" VerticalAlignment="Top" ButtonsAlignment="Opposite" Grid.Row="6" Grid.Column="1" Margin="35,0,0,0" HorizontalAlignment="Left" Background="White" BorderBrush="#FF455A64" Foreground="#FF455A64" Height="26"/>
-                    <CheckBox x:Name="CbSecurity" Style="{StaticResource MaterialDesignUserForegroundCheckBox}" Margin="110,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="6" Grid.Column="1" Width="87" Height="26" Click="CbSecurity_Click">
+                    <CheckBox x:Name="CbSecurity" Style="{StaticResource MaterialDesignUserForegroundCheckBox}" Margin="110,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="6" Grid.Column="1" Width="87" Height="26" Click="CbSecurity_Click" Checked="CbSecurity_Checked">
                         Security
                     </CheckBox>
                     <Button x:Name="BtnConnect" Background="#FF455A64" BorderBrush="#FF455A64" Content="Подключиться" Padding="0" materialDesign:RippleAssist.IsCentered="True" Click="BtnConnect_Click" Grid.Column="1" Grid.Row="6" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="112" Margin="0,0,10,0" FontSize="14"/>

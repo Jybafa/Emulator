@@ -47,6 +47,7 @@ namespace Emulator
 		{
 			string[] strArray = new string[4];
 			int i = 0;
+			bool tmp = true;
 			foreach (string line in File.ReadLines("LastUserParameters.txt"))
 			{
 				string[] separator = new string[] { ";" };
@@ -54,12 +55,18 @@ namespace Emulator
 				if (strArray.Length >= 4 && strArray2[0] == "SmartCamera")
 				{
 					strArray[i] = "SmartCamera;" + Server + ";" + Key + ";" + Security + ";" + Thing + ";" + Service + ";";
+					tmp = false;
+					i++;
 				}
-				else
+				else if (strArray2[0].Length > 0)
 				{
 					strArray[i] = line;
+					i++;
 				}
-				i++;
+			}
+			if (tmp)
+			{
+				strArray[i] = "SmartCamera;" + Server + ";" + Key + ";" + Security + ";" + Thing + ";" + Service + ";";
 			}
 			File.WriteAllLines("LastUserParameters.txt", strArray);
 		}
@@ -217,13 +224,18 @@ namespace Emulator
 				}
 				catch (Exception exc)
 				{
-					TbLogSmartCamera_Add("Ошибка загрузки параметров пользователя");
+					TbLogSmartCamera_Add("Ошибка установки параметров пользователя");
 				}
 			}
 			else
 			{
-				TbLogSmartCamera_Add("Ошибка загрузки параметров пользователя");
+				TbLogSmartCamera_Add("Ошибка установки параметров пользователя");
 			}
+		}
+
+		private void CbSecurity_Checked(object sender, RoutedEventArgs e)
+		{
+			Security = CbSecurity.IsChecked.ToString();
 		}
 
 		Worker _SmartCamera;
